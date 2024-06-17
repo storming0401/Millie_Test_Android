@@ -2,7 +2,7 @@ package com.kwj.data.source.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.kwj.data.model.Article
+import com.kwj.data.model.NewsResponse
 import com.kwj.data.source.db.dao.NewsDao
 
 /**
@@ -14,7 +14,7 @@ import com.kwj.data.source.db.dao.NewsDao
  */
 @Database(
     version = 1,
-    entities = [Article::class],
+    entities = [NewsResponse.Article::class],
     exportSchema = false
 )
 abstract class NewsDatabase: RoomDatabase() {

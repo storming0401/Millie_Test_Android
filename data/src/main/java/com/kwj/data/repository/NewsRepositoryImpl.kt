@@ -1,7 +1,17 @@
 package com.kwj.data.repository
 
+import com.kwj.common.log.MillieLogger
+import com.kwj.data.model.mapper.mapperToNewsList
+import com.kwj.data.source.db.dao.NewsDao
 import com.kwj.data.source.remote.ApiService
+import com.kwj.data.util.API_KEY
+import com.kwj.data.util.COUNTRY_KR
+import com.kwj.domain.base.Result
+import com.kwj.domain.model.NewsItem
 import com.kwj.domain.repository.NewsRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -14,9 +24,16 @@ import javax.inject.Inject
  */
 class NewsRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
+    private val newsDao: NewsDao,
 ) : NewsRepository {
 
-    override fun getTopHeadlines() {
-        TODO("Not yet implemented")
+    override suspend fun getTopHeadlines(): Flow<Result<List<NewsItem>>> = flow {
+        val response = apiService.getTopHeadLines(COUNTRY_KR, API_KEY)
+        newsDao.insertArticles(response.articles)
+        emit(Result.Success(response.articles.mapperToNewsList()))
+
+    }.catch { e ->
+        MillieLogger.e("[ERROR] getTopHeadlines : ${e.message}")
+        emit(Result.Success(newsDao.getAllArticles().mapperToNewsList()))
     }
 }
