@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="label_app_title">Millie News</string>
     <string name="label_dialog_not_network">네트워크 연결 상태를 확인 후 다시 시도해 주세요.</string>
     <string name="label_dialog_ok">확인</string>
 

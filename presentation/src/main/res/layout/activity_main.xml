@@ -33,8 +33,8 @@
                     android:backgroundTint="@color/color_FFFFFF"
                     android:fontFamily="@font/pretendard_regular"
                     android:gravity="center_vertical"
+                    android:text="@string/label_app_title"
                     android:textColor="@color/color_FFFFFF"
-                    android:textColorHint="@color/color_BFBFBF"
                     android:textSize="22sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +44,18 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:navGraph="@navigation/nav_graph" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,6 +1,6 @@
 package com.kwj.data.model.mapper
 
-import com.kwj.data.model.Article
+import com.kwj.data.model.NewsResponse
 import com.kwj.domain.model.NewsItem
 
 /**
@@ -12,10 +12,18 @@ import com.kwj.domain.model.NewsItem
  * @author (김위진)
  * @since (2024-06-13)
  */
-fun List<Article>.mapperToNewsList(): List<NewsItem> {
+fun List<NewsResponse.Article>.mapperToNewsList(): List<NewsItem> {
     val newsList = arrayListOf<NewsItem>()
     this.map { article ->
-        newsList.add(NewsItem(article.title, article.urlToImage, article.publishedAt))
+        newsList.add(
+            NewsItem(
+                article.title,
+                article.urlToImage,
+                article.publishedAt,
+                article.url,
+                false
+            )
+        )
     }
     return newsList
 }
