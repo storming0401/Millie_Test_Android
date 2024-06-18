@@ -15,7 +15,15 @@ import com.kwj.domain.model.NewsItem
 fun List<NewsResponse.Article>.mapperToNewsList(): List<NewsItem> {
     val newsList = arrayListOf<NewsItem>()
     this.map { article ->
-        newsList.add(NewsItem(article.title, article.urlToImage, article.publishedAt))
+        newsList.add(
+            NewsItem(
+                article.title,
+                article.urlToImage,
+                article.publishedAt,
+                article.url,
+                false
+            )
+        )
     }
     return newsList
 }

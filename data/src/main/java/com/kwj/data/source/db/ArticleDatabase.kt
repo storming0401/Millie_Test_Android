@@ -2,8 +2,8 @@ package com.kwj.data.source.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.kwj.data.model.NewsResponse
-import com.kwj.data.source.db.dao.NewsDao
+import com.kwj.data.source.db.dao.ArticleDao
+import com.kwj.data.source.db.entity.ArticleEntity
 
 /**
  * Room 라이브러리의 데이터베이스 인스턴스를 정의하는 추상 클래스 입니다.
@@ -14,9 +14,9 @@ import com.kwj.data.source.db.dao.NewsDao
  */
 @Database(
     version = 1,
-    entities = [NewsResponse.Article::class],
+    entities = [ArticleEntity::class],
     exportSchema = false
 )
-abstract class NewsDatabase: RoomDatabase() {
-    abstract fun newsDao(): NewsDao
+abstract class ArticleDatabase: RoomDatabase() {
+    abstract fun articleDao(): ArticleDao
 }

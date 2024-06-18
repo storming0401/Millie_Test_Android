@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 /**
@@ -31,8 +32,8 @@ class NewsViewModel @Inject constructor(
 
     fun getNews() {
         onMain {
-            _state.value = NewsViewState.Loading
             getNewsUseCase.invoke()
+                .onStart { _state.value = NewsViewState.Loading }
                 .catch { caues ->
                     _state.value = NewsViewState.Error(caues.message)
                     MillieLogger.d("kwj ERROR = $caues")

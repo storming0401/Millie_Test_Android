@@ -12,9 +12,11 @@ import com.kwj.presentation.R
 import com.kwj.presentation.base.BaseFragment
 import com.kwj.presentation.databinding.FragmentNewsBinding
 import com.kwj.presentation.ui.main.news.adapter.NewsListAdpater
+import com.kwj.presentation.ui.main.news.adapter.util.LastItemPaddingDecoration
 import com.kwj.presentation.util.ext.gone
 import com.kwj.presentation.util.ext.text
 import com.kwj.presentation.util.ext.visible
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -25,6 +27,7 @@ import kotlinx.coroutines.flow.onEach
  * @author (김위진)
  * @since (2024-06-17)
  */
+@AndroidEntryPoint
 class NewsFragment : BaseFragment<FragmentNewsBinding>(R.layout.fragment_news) {
 
     private val viewModel: NewsViewModel by viewModels()
@@ -48,8 +51,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(R.layout.fragment_news) {
         newsListAdpater = NewsListAdpater()
         binding.rvNews.apply {
             setHasFixedSize(true)
-            layoutManager = GridLayoutManager(requireContext(), 3)
+            layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = newsListAdpater
+
+            val paddingInPixels = resources.getDimensionPixelSize(R.dimen.recyclerview_last_item_padding)
+            addItemDecoration(LastItemPaddingDecoration(paddingInPixels))
         }
 
         binding.rvNews.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -60,16 +66,16 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(R.layout.fragment_news) {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val currentPosition = layoutManager.findFirstVisibleItemPosition()
 
-                if (currentPosition < 10) {
+                if (currentPosition < 5) {
                     fab.hide()
                     return
                 }
 
-                if (dy > 10 && fab.isShown) {
+                if (dy > 5 && fab.isShown) {
                     fab.hide()
                 }
 
-                if (dy < -10 && !fab.isShown) {
+                if (dy < -5 && !fab.isShown) {
                     fab.show()
                 }
             }

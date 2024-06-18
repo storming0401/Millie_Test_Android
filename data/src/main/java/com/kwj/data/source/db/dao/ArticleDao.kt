@@ -4,7 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.kwj.data.model.Article
+import com.kwj.data.source.db.entity.ArticleEntity
+import javax.inject.Singleton
 
 /**
  * News 데이터에 대한 데이터베이스 액세스를 정의하는 인터페이스 입니다.
@@ -15,10 +16,11 @@ import com.kwj.data.model.Article
  * @since (2024-06-13)
  */
 @Dao
-interface NewsDao {
+@Singleton
+interface ArticleDao {
     @Query("SELECT * FROM article")
-    fun getAllArticles(): List<Article>
+    fun getAll(): List<ArticleEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertArticles(articles: List<Article>)
+    suspend fun insertAll(articles: List<ArticleEntity>)
 }

@@ -1,7 +1,7 @@
 package com.kwj.millie.di
 
 import com.kwj.data.repository.NewsRepositoryImpl
-import com.kwj.data.source.db.dao.NewsDao
+import com.kwj.data.source.db.dao.ArticleDao
 import com.kwj.data.source.remote.ApiService
 import com.kwj.domain.repository.NewsRepository
 import dagger.Module
@@ -26,6 +26,6 @@ object RepoModule {
     @Singleton
     fun provideNewsRepository(
         apiService: ApiService,
-        newsDao: NewsDao
-    ): NewsRepository = NewsRepositoryImpl(apiService, newsDao)
+        articleDao: ArticleDao
+    ): NewsRepository = NewsRepositoryImpl(apiService, articleDao)
 }

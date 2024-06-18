@@ -2,7 +2,8 @@ package com.kwj.data.repository
 
 import com.kwj.common.log.MillieLogger
 import com.kwj.data.model.mapper.mapperToNewsList
-import com.kwj.data.source.db.dao.NewsDao
+import com.kwj.data.model.mapper.mappertoArticleEntitys
+import com.kwj.data.source.db.dao.ArticleDao
 import com.kwj.data.source.remote.ApiService
 import com.kwj.data.util.API_KEY
 import com.kwj.data.util.COUNTRY_KR
@@ -24,16 +25,16 @@ import javax.inject.Inject
  */
 class NewsRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
-    private val newsDao: NewsDao,
+    private val articleDao: ArticleDao,
 ) : NewsRepository {
 
     override suspend fun getTopHeadlines(): Flow<Result<List<NewsItem>>> = flow {
         val response = apiService.getTopHeadLines(COUNTRY_KR, API_KEY)
-        newsDao.insertArticles(response.articles)
+        articleDao.insertAll(response.articles.mappertoArticleEntitys())
         emit(Result.Success(response.articles.mapperToNewsList()))
 
     }.catch { e ->
         MillieLogger.e("[ERROR] getTopHeadlines : ${e.message}")
-        emit(Result.Success(newsDao.getAllArticles().mapperToNewsList()))
+        emit(Result.Success(articleDao.getAll().mapperToNewsList()))
     }
 }
