@@ -13,12 +13,11 @@ import com.kwj.domain.model.NewsItem
  * @author (김위진)
  * @since (2024-06-18)
  */
-fun List<NewsResponse.Article>.mappertoArticleEntitys() : List<ArticleEntity> {
+fun List<NewsResponse.Article>.mapperToArticleEntitys() : List<ArticleEntity> {
     val articleEntities = arrayListOf<ArticleEntity>()
-    this.mapIndexed { index, article ->
+    this.map { article ->
         articleEntities.add(
             ArticleEntity(
-                index,
                 article.title,
                 article.urlToImage,
                 article.publishedAt,
@@ -39,7 +38,7 @@ fun List<ArticleEntity>.mapperToNewsList() : List<NewsItem> {
                 article.urlToImage,
                 article.publishedAt,
                 article.url,
-                article.isViewed
+                false
             )
         )
     }

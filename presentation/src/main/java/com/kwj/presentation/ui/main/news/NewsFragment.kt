@@ -1,5 +1,6 @@
 package com.kwj.presentation.ui.main.news
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
@@ -11,6 +12,7 @@ import com.kwj.domain.model.NewsItem
 import com.kwj.presentation.R
 import com.kwj.presentation.base.BaseFragment
 import com.kwj.presentation.databinding.FragmentNewsBinding
+import com.kwj.presentation.ui.detail.WebViewActivity
 import com.kwj.presentation.ui.main.news.adapter.NewsListAdpater
 import com.kwj.presentation.ui.main.news.adapter.util.LastItemPaddingDecoration
 import com.kwj.presentation.util.ext.gone
@@ -48,10 +50,17 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(R.layout.fragment_news) {
     }
 
     private fun initListView() {
-        newsListAdpater = NewsListAdpater()
+        newsListAdpater = NewsListAdpater { newsItem ->
+            val intent = Intent(context, WebViewActivity::class.java).apply {
+                putExtra("url", newsItem.url)
+            }
+            requireActivity().startActivity(intent)
+        }
+
         binding.rvNews.apply {
             setHasFixedSize(true)
-            layoutManager = GridLayoutManager(requireContext(), 1)
+            val spanCount = if (resources.configuration.screenWidthDp >= 600) 3 else 1
+            layoutManager = GridLayoutManager(requireContext(), spanCount)
             adapter = newsListAdpater
 
             val paddingInPixels = resources.getDimensionPixelSize(R.dimen.recyclerview_last_item_padding)
