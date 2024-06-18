@@ -18,11 +18,10 @@ import com.kwj.presentation.ui.detail.WebViewActivity
  * @since (2024-06-17)
  */
 class NewsItemViewHolder (
-    private val binding: ItemNewsBinding,
-    private val context: Context
+    private val binding: ItemNewsBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(newsItem: NewsItem?) {
+    fun bind(newsItem: NewsItem?, itemClickListener: (NewsItem) -> Unit) {
         if (newsItem == null) return
 
         binding.newsItem = newsItem
@@ -30,10 +29,7 @@ class NewsItemViewHolder (
 
         binding.rootLayout.setOnClickListener {
             binding.tvTitle.setTextColor(Color.RED)
-            val intent = Intent(context, WebViewActivity::class.java).apply {
-                putExtra("url", newsItem.url)
-            }
-            context.startActivity(intent)
+            itemClickListener(newsItem)
         }
     }
 
@@ -42,7 +38,7 @@ class NewsItemViewHolder (
             val view =
                 LayoutInflater.from(parent.context).inflate(R.layout.item_news, parent, false)
             val binding = ItemNewsBinding.bind(view)
-            return NewsItemViewHolder(binding, parent.context)
+            return NewsItemViewHolder(binding)
         }
     }
 }
