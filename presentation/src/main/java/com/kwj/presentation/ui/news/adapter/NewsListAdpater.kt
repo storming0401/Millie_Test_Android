@@ -26,7 +26,7 @@ class NewsListAdpater constructor(
     companion object {
         private val diffUtil = object : DiffUtil.ItemCallback<NewsItem>() {
             override fun areItemsTheSame(oldItem: NewsItem, newItem: NewsItem): Boolean {
-                return oldItem.imagePath == newItem.imagePath
+                return oldItem.filePath == newItem.filePath
             }
 
             override fun areContentsTheSame(oldItem: NewsItem, newItem: NewsItem): Boolean =

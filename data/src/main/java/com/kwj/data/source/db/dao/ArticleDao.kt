@@ -21,9 +21,15 @@ interface ArticleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(articles: List<ArticleEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertClickedItem(articleEntity: ArticleEntity)
+
     @Query("SELECT * FROM article")
-    fun getAll(): List<ArticleEntity>
+    suspend fun getAll(): List<ArticleEntity>
 
     @Query("SELECT filePath FROM article WHERE fileName = :fileName LIMIT 1")
     suspend fun getFilePath(fileName: String): String?
+
+    @Query("SELECT isClicked FROM article WHERE url = :url LIMIT 1")
+    suspend fun getClicked(url: String): Boolean?
 }

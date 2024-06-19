@@ -1,6 +1,5 @@
 package com.kwj.data.model.mapper
 
-import com.kwj.common.log.MillieLogger
 import com.kwj.data.model.NewsResponse
 import com.kwj.data.source.db.dao.ArticleDao
 import com.kwj.domain.model.NewsItem
@@ -21,15 +20,17 @@ import java.util.TimeZone
 suspend fun List<NewsResponse.Article>.mapperToNewsList(articleDao: ArticleDao): List<NewsItem> {
     val newsList = arrayListOf<NewsItem>()
     this.map { article ->
-        val imagePath = article.urlToImage?.extractFileName()?.getFilePath(articleDao) ?: article.urlToImage
+        val fileName = article.urlToImage?.extractFileName()
+        val imagePath = fileName?.getFilePath(articleDao) ?: article.urlToImage
 
         newsList.add(
             NewsItem(
+                fileName,
                 imagePath,
                 article.title,
                 article.publishedAt.getPublishedDate(),
                 article.url,
-                false
+                articleDao.getClicked(article.url) ?: false
             )
         )
     }

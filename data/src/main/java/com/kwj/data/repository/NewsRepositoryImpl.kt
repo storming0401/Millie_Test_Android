@@ -9,6 +9,7 @@ import com.kwj.data.source.remote.ApiService
 import com.kwj.common.API_KEY
 import com.kwj.common.COUNTRY_KR
 import com.kwj.common.util.isNetworkAvailable
+import com.kwj.data.model.mapper.mapperToArticleEntity
 import com.kwj.domain.base.Result
 import com.kwj.domain.model.NewsItem
 import com.kwj.domain.repository.NewsRepository
@@ -40,7 +41,7 @@ class NewsRepositoryImpl @Inject constructor(
             val response = apiService.getTopHeadLines(COUNTRY_KR, API_KEY)
             emit(Result.Success(response.articles.mapperToNewsList(articleDao)))
             withContext(ioDispatcher) {
-                articleDao.insertAll(response.articles.mapperToArticleEntitys(context))
+                articleDao.insertAll(response.articles.mapperToArticleEntitys(context, articleDao))
             }
 
         } else {
@@ -49,5 +50,10 @@ class NewsRepositoryImpl @Inject constructor(
 
     }.catch { e ->
         MillieLogger.e("[ERROR] getTopHeadlines : ${e.message}")
+    }
+
+    override suspend fun saveClickedItem(newsItem: NewsItem) {
+        val articleEntity = newsItem.mapperToArticleEntity()
+        articleDao.insertClickedItem(articleEntity)
     }
 }

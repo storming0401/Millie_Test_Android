@@ -13,10 +13,10 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "article")
 class ArticleEntity(
-    val fileName: String,
-    val filePath: String,
+    val fileName: String?,
+    val filePath: String?,
     val title: String,
     val publishedAt: String,
     @PrimaryKey val url: String,
-    var isVisited: Boolean = false
+    var isClicked: Boolean = false
 )

@@ -23,11 +23,15 @@ class NewsItemViewHolder (
 
         binding.newsItem = newsItem
         binding.executePendingBindings()
-
-        binding.tvTitle.setTextColor(Color.BLACK)
         binding.rootLayout.setOnClickListener {
             binding.tvTitle.setTextColor(Color.RED)
             itemClickListener(newsItem)
+        }
+
+        if (newsItem.isClicked) {
+            binding.tvTitle.setTextColor(Color.RED)
+        } else {
+            binding.tvTitle.setTextColor(Color.BLACK)
         }
     }
 

@@ -55,6 +55,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(R.layout.fragment_news) {
                 putExtra("url", newsItem.url)
             }
             requireActivity().startActivity(intent)
+
+            viewModel.saveClickedItem(newsItem)
         }
 
         binding.rvNews.apply {
