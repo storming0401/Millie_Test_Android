@@ -1,6 +1,7 @@
 package com.kwj.data.source.remote
 
 import com.kwj.data.model.NewsResponse
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -17,5 +18,5 @@ interface ApiService {
     suspend fun getTopHeadLines(
         @Query("country") country: String,
         @Query("apiKey") apiKey: String
-    ): NewsResponse
+    ): Response<NewsResponse>
 }
