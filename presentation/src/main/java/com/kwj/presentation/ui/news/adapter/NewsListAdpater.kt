@@ -1,4 +1,4 @@
-package com.kwj.presentation.ui.main.news.adapter
+package com.kwj.presentation.ui.news.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -26,7 +26,7 @@ class NewsListAdpater constructor(
     companion object {
         private val diffUtil = object : DiffUtil.ItemCallback<NewsItem>() {
             override fun areItemsTheSame(oldItem: NewsItem, newItem: NewsItem): Boolean {
-                return oldItem.imageUrl == newItem.imageUrl
+                return oldItem.imagePath == newItem.imagePath
             }
 
             override fun areContentsTheSame(oldItem: NewsItem, newItem: NewsItem): Boolean =

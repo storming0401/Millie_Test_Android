@@ -1,4 +1,4 @@
-package com.kwj.presentation.ui.main.news
+package com.kwj.presentation.ui.news
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -13,8 +13,8 @@ import com.kwj.presentation.R
 import com.kwj.presentation.base.BaseFragment
 import com.kwj.presentation.databinding.FragmentNewsBinding
 import com.kwj.presentation.ui.detail.WebViewActivity
-import com.kwj.presentation.ui.main.news.adapter.NewsListAdpater
-import com.kwj.presentation.ui.main.news.adapter.util.LastItemPaddingDecoration
+import com.kwj.presentation.ui.news.adapter.NewsListAdpater
+import com.kwj.presentation.ui.news.adapter.util.LastItemPaddingDecoration
 import com.kwj.presentation.util.ext.gone
 import com.kwj.presentation.util.ext.text
 import com.kwj.presentation.util.ext.visible

@@ -18,9 +18,12 @@ import javax.inject.Singleton
 @Dao
 @Singleton
 interface ArticleDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(articles: List<ArticleEntity>)
+
     @Query("SELECT * FROM article")
     fun getAll(): List<ArticleEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(articles: List<ArticleEntity>)
+    @Query("SELECT filePath FROM article WHERE fileName = :fileName LIMIT 1")
+    suspend fun getFilePath(fileName: String): String?
 }

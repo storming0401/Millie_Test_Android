@@ -1,4 +1,4 @@
-package com.kwj.presentation.ui.main.news
+package com.kwj.presentation.ui.news
 
 import com.kwj.common.log.MillieLogger
 import com.kwj.domain.base.Result
@@ -36,13 +36,16 @@ class NewsViewModel @Inject constructor(
                 .onStart { _state.value = NewsViewState.Loading }
                 .catch { caues ->
                     _state.value = NewsViewState.Error(caues.message)
-                    MillieLogger.d("kwj ERROR = $caues")
                 }
                 .collectLatest { result ->
                     when (result) {
                         is Result.Success -> {
                             if (result.value.isNotEmpty()) {
                                 _state.value = NewsViewState.GetNewsList(result.value)
+                                result.value.map {
+                                    MillieLogger.d("imagePath >>> ${it.imagePath}")
+                                }
+
                             } else {
                                 _state.value = NewsViewState.Empty
                             }

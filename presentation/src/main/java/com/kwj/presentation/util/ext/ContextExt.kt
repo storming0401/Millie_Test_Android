@@ -2,9 +2,6 @@ package com.kwj.presentation.util.ext
 
 import android.app.Activity
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -35,18 +32,3 @@ fun Context.text(resId: Int, value: String) =
 
 fun Context.color(resId: Int) =
     ContextCompat.getColor(this, resId)
-
-fun Context.isNetworkAvailable(): Boolean {
-    val connectivityManager =
-        this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
-
-    val now = connectivityManager.activeNetwork ?: return false
-    val actNw = connectivityManager.getNetworkCapabilities(now) ?: return false
-
-    return actNw.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-}

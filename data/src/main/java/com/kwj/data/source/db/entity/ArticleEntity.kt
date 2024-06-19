@@ -1,6 +1,5 @@
 package com.kwj.data.source.db.entity
 
-import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -14,9 +13,10 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "article")
 class ArticleEntity(
-    @PrimaryKey val title: String,
-    val urlToImage: String?,
+    val fileName: String,
+    val filePath: String,
+    val title: String,
     val publishedAt: String,
-    val url: String,
+    @PrimaryKey val url: String,
     var isVisited: Boolean = false
 )

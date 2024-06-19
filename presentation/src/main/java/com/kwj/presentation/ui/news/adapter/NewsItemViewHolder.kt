@@ -1,7 +1,5 @@
-package com.kwj.presentation.ui.main.news.adapter
+package com.kwj.presentation.ui.news.adapter
 
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kwj.domain.model.NewsItem
 import com.kwj.presentation.R
 import com.kwj.presentation.databinding.ItemNewsBinding
-import com.kwj.presentation.ui.detail.WebViewActivity
 
 /**
  * News RecyclerView의 Item 항목을 나타내기 위한 ViewHolder 클래스 입니다.
@@ -27,6 +24,7 @@ class NewsItemViewHolder (
         binding.newsItem = newsItem
         binding.executePendingBindings()
 
+        binding.tvTitle.setTextColor(Color.BLACK)
         binding.rootLayout.setOnClickListener {
             binding.tvTitle.setTextColor(Color.RED)
             itemClickListener(newsItem)

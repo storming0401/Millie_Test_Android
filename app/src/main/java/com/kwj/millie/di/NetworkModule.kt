@@ -1,9 +1,9 @@
 package com.kwj.millie.di
 
 import com.kwj.data.source.remote.ApiService
-import com.kwj.data.util.BASE_URL
+import com.kwj.common.BASE_URL
 import com.kwj.data.util.NullOnEmptyConverterFactory
-import com.kwj.data.util.TIME_OUT
+import com.kwj.common.TIME_OUT
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

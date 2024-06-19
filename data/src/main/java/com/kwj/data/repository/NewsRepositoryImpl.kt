@@ -1,19 +1,24 @@
 package com.kwj.data.repository
 
+import android.content.Context
 import com.kwj.common.log.MillieLogger
-import com.kwj.data.model.mapper.mapperToNewsList
 import com.kwj.data.model.mapper.mapperToArticleEntitys
+import com.kwj.data.model.mapper.mapperToNewsList
 import com.kwj.data.source.db.dao.ArticleDao
 import com.kwj.data.source.remote.ApiService
-import com.kwj.data.util.API_KEY
-import com.kwj.data.util.COUNTRY_KR
+import com.kwj.common.API_KEY
+import com.kwj.common.COUNTRY_KR
+import com.kwj.common.util.isNetworkAvailable
 import com.kwj.domain.base.Result
 import com.kwj.domain.model.NewsItem
 import com.kwj.domain.repository.NewsRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * NewsRepository 의 구현체 클래스 입니다.
@@ -24,19 +29,25 @@ import javax.inject.Inject
  * @since (2024-06-13)
  */
 class NewsRepositoryImpl @Inject constructor(
+    @Named("IO") private val ioDispatcher: CoroutineDispatcher,
+    private val context: Context,
     private val apiService: ApiService,
-    private val articleDao: ArticleDao,
+    private val articleDao: ArticleDao
 ) : NewsRepository {
 
     override suspend fun getTopHeadlines(): Flow<Result<List<NewsItem>>> = flow {
-        val response = apiService.getTopHeadLines(COUNTRY_KR, API_KEY)
-        articleDao.insertAll(response.articles.mapperToArticleEntitys())
-        emit(Result.Success(response.articles.mapperToNewsList()))
+        if (isNetworkAvailable(context)) {
+            val response = apiService.getTopHeadLines(COUNTRY_KR, API_KEY)
+            emit(Result.Success(response.articles.mapperToNewsList(articleDao)))
+            withContext(ioDispatcher) {
+                articleDao.insertAll(response.articles.mapperToArticleEntitys(context))
+            }
 
-        MillieLogger.e("kwjjj getTopHeadlines ~~ ")
+        } else {
+            emit(Result.Success(articleDao.getAll().mapperToNewsList()))
+        }
 
     }.catch { e ->
-        MillieLogger.e("kwjjj [ERROR] getTopHeadlines : ${e.message}")
-        emit(Result.Success(articleDao.getAll().mapperToNewsList()))
+        MillieLogger.e("[ERROR] getTopHeadlines : ${e.message}")
     }
 }

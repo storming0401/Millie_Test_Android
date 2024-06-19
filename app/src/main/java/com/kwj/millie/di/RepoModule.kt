@@ -1,5 +1,7 @@
 package com.kwj.millie.di
 
+import android.app.Application
+import android.content.Context
 import com.kwj.data.repository.NewsRepositoryImpl
 import com.kwj.data.source.db.dao.ArticleDao
 import com.kwj.data.source.remote.ApiService
@@ -8,6 +10,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -23,9 +27,16 @@ import javax.inject.Singleton
 object RepoModule {
 
     @Provides
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
+
+    @Provides
     @Singleton
     fun provideNewsRepository(
+        @Named("IO") ioDispatcher: CoroutineDispatcher,
+        context: Context,
         apiService: ApiService,
         articleDao: ArticleDao
-    ): NewsRepository = NewsRepositoryImpl(apiService, articleDao)
+    ): NewsRepository = NewsRepositoryImpl(ioDispatcher, context, apiService, articleDao)
 }

@@ -1,4 +1,4 @@
-package com.kwj.data.util
+package com.kwj.common
 
 const val TIME_OUT = 10L
 const val BASE_URL: String = "https://newsapi.org/v2/"

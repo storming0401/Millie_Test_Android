@@ -1,6 +1,8 @@
 package com.kwj.data.model.mapper
 
+import com.kwj.common.log.MillieLogger
 import com.kwj.data.model.NewsResponse
+import com.kwj.data.source.db.dao.ArticleDao
 import com.kwj.domain.model.NewsItem
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -16,13 +18,15 @@ import java.util.TimeZone
  * @author (김위진)
  * @since (2024-06-13)
  */
-fun List<NewsResponse.Article>.mapperToNewsList(): List<NewsItem> {
+suspend fun List<NewsResponse.Article>.mapperToNewsList(articleDao: ArticleDao): List<NewsItem> {
     val newsList = arrayListOf<NewsItem>()
     this.map { article ->
+        val imagePath = article.urlToImage?.extractFileName()?.getFilePath(articleDao) ?: article.urlToImage
+
         newsList.add(
             NewsItem(
+                imagePath,
                 article.title,
-                article.urlToImage,
                 article.publishedAt.getPublishedDate(),
                 article.url,
                 false
@@ -31,6 +35,11 @@ fun List<NewsResponse.Article>.mapperToNewsList(): List<NewsItem> {
     }
     return newsList
 }
+
+private fun String.extractFileName() = this.substringAfterLast('/')
+
+private suspend fun String.getFilePath(articleDao: ArticleDao): String? =
+    articleDao.getFilePath(this)
 
 private fun String.getPublishedDate(): String {
     val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())

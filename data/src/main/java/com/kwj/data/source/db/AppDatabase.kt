@@ -17,6 +17,6 @@ import com.kwj.data.source.db.entity.ArticleEntity
     entities = [ArticleEntity::class],
     exportSchema = false
 )
-abstract class ArticleDatabase: RoomDatabase() {
+abstract class AppDatabase: RoomDatabase() {
     abstract fun articleDao(): ArticleDao
 }
