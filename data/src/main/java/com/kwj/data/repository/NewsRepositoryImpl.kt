@@ -39,9 +39,16 @@ class NewsRepositoryImpl @Inject constructor(
     override suspend fun getTopHeadlines(): Flow<Result<List<NewsItem>>> = flow {
         if (isNetworkAvailable(context)) {
             val response = apiService.getTopHeadLines(COUNTRY_KR, API_KEY)
-            emit(Result.Success(response.articles.mapperToNewsList(articleDao)))
-            withContext(ioDispatcher) {
-                articleDao.insertAll(response.articles.mapperToArticleEntitys(context, articleDao))
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    emit(Result.Success(it.articles.mapperToNewsList(articleDao)))
+                    withContext(ioDispatcher) {
+                        articleDao.insertAll(it.articles.mapperToArticleEntitys(context, articleDao))
+                    }
+                }
+
+            } else {
+                emit(Result.Success(articleDao.getAll().mapperToNewsList()))
             }
 
         } else {
@@ -50,6 +57,7 @@ class NewsRepositoryImpl @Inject constructor(
 
     }.catch { e ->
         MillieLogger.e("[ERROR] getTopHeadlines : ${e.message}")
+        emit(Result.Success(articleDao.getAll().mapperToNewsList()))
     }
 
     override suspend fun saveClickedItem(newsItem: NewsItem) {
