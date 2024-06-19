@@ -2,7 +2,7 @@ package com.kwj.millie.di
 
 import android.app.Application
 import androidx.room.Room
-import com.kwj.data.source.db.ArticleDatabase
+import com.kwj.data.source.db.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +23,7 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideDatabase(application: Application) =
-        Room.databaseBuilder(application, ArticleDatabase::class.java, "database")
+        Room.databaseBuilder(application, AppDatabase::class.java, "database")
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()

@@ -1,4 +1,4 @@
-package com.kwj.presentation.ui.main.news
+package com.kwj.presentation.ui.news
 
 import com.kwj.domain.model.NewsItem
 

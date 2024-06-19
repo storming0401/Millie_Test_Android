@@ -1,4 +1,4 @@
-package com.kwj.presentation.ui.main.news.adapter.util
+package com.kwj.presentation.ui.news.adapter.util
 
 import android.graphics.Rect
 import android.view.View

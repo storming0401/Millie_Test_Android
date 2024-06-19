@@ -1,7 +1,12 @@
 package com.kwj.data.model.mapper
 
 import com.kwj.data.model.NewsResponse
+import com.kwj.data.source.db.dao.ArticleDao
 import com.kwj.domain.model.NewsItem
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 /**
  * API Source로 받은 NewsResponse의 Article을 도메인 모델인 NewsItem으로 변환하는 역할을 하는 Mapper 클래스 입니다.
@@ -12,18 +17,39 @@ import com.kwj.domain.model.NewsItem
  * @author (김위진)
  * @since (2024-06-13)
  */
-fun List<NewsResponse.Article>.mapperToNewsList(): List<NewsItem> {
+suspend fun List<NewsResponse.Article>.mapperToNewsList(articleDao: ArticleDao): List<NewsItem> {
     val newsList = arrayListOf<NewsItem>()
     this.map { article ->
+        val fileName = article.urlToImage?.extractFileName()
+        val imagePath = fileName?.getFilePath(articleDao) ?: article.urlToImage
+
         newsList.add(
             NewsItem(
+                fileName,
+                imagePath,
                 article.title,
-                article.urlToImage,
-                article.publishedAt,
+                article.publishedAt.getPublishedDate(),
                 article.url,
-                false
+                articleDao.getClicked(article.url) ?: false
             )
         )
     }
     return newsList
+}
+
+private fun String.extractFileName() = this.substringAfterLast('/')
+
+private suspend fun String.getFilePath(articleDao: ArticleDao): String? =
+    articleDao.getFilePath(this)
+
+private fun String.getPublishedDate(): String {
+    val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    isoFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+    val date: Date = isoFormat.parse(this) ?: return ""
+
+    val desiredFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    desiredFormat.timeZone = TimeZone.getDefault()
+
+    return desiredFormat.format(date)
 }

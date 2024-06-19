@@ -1,8 +1,9 @@
-package com.kwj.presentation.ui.main.news
+package com.kwj.presentation.ui.news
 
-import com.kwj.common.log.MillieLogger
 import com.kwj.domain.base.Result
+import com.kwj.domain.model.NewsItem
 import com.kwj.domain.usecase.GetNewsUseCase
+import com.kwj.domain.usecase.SaveClickedItemUseCase
 import com.kwj.presentation.base.BaseViewModel
 import com.kwj.presentation.base.DispatcherProvider
 import com.kwj.presentation.base.onMain
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider,
     private val getNewsUseCase: GetNewsUseCase,
+    private val saveClickedItemUseCase: SaveClickedItemUseCase
 ) : BaseViewModel(dispatcherProvider) {
 
     private val _state = MutableStateFlow<NewsViewState>(NewsViewState.Empty)
@@ -36,13 +38,13 @@ class NewsViewModel @Inject constructor(
                 .onStart { _state.value = NewsViewState.Loading }
                 .catch { caues ->
                     _state.value = NewsViewState.Error(caues.message)
-                    MillieLogger.d("kwj ERROR = $caues")
                 }
                 .collectLatest { result ->
                     when (result) {
                         is Result.Success -> {
                             if (result.value.isNotEmpty()) {
                                 _state.value = NewsViewState.GetNewsList(result.value)
+
                             } else {
                                 _state.value = NewsViewState.Empty
                             }
@@ -57,6 +59,12 @@ class NewsViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    fun saveClickedItem(newsItem: NewsItem) {
+        onMain {
+            saveClickedItemUseCase.invoke(newsItem)
         }
     }
 }

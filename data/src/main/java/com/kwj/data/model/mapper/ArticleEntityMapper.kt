@@ -1,6 +1,9 @@
 package com.kwj.data.model.mapper
 
+import android.content.Context
+import com.kwj.common.util.downloadAndSaveImage
 import com.kwj.data.model.NewsResponse
+import com.kwj.data.source.db.dao.ArticleDao
 import com.kwj.data.source.db.entity.ArticleEntity
 import com.kwj.domain.model.NewsItem
 
@@ -13,35 +16,58 @@ import com.kwj.domain.model.NewsItem
  * @author (김위진)
  * @since (2024-06-18)
  */
-fun List<NewsResponse.Article>.mappertoArticleEntitys() : List<ArticleEntity> {
+suspend fun List<NewsResponse.Article>.mapperToArticleEntitys(
+    context: Context,
+    articleDao: ArticleDao
+): List<ArticleEntity> {
     val articleEntities = arrayListOf<ArticleEntity>()
-    this.mapIndexed { index, article ->
+    this.map { article ->
+        val fileName = article.urlToImage?.extractFileName() ?: ""
+
         articleEntities.add(
             ArticleEntity(
-                index,
+                fileName,
+                article.urlToImage.extractFilePath(context, fileName),
                 article.title,
-                article.urlToImage,
                 article.publishedAt,
                 article.url,
-                false
+                articleDao.getClicked(article.url) ?: false
             )
         )
     }
     return articleEntities
 }
 
-fun List<ArticleEntity>.mapperToNewsList() : List<NewsItem> {
+private fun String.extractFileName() = this.substringAfterLast('/')
+
+private suspend fun String?.extractFilePath(context: Context, fileName: String): String {
+    if (this == null) return ""
+    return downloadAndSaveImage(context, this, fileName) ?: ""
+}
+
+fun List<ArticleEntity>.mapperToNewsList(): List<NewsItem> {
     val newsList = arrayListOf<NewsItem>()
     this.map { article ->
         newsList.add(
             NewsItem(
+                article.fileName,
+                article.filePath,
                 article.title,
-                article.urlToImage,
                 article.publishedAt,
                 article.url,
-                article.isViewed
+                article.isClicked
             )
         )
     }
     return newsList
 }
+
+fun NewsItem.mapperToArticleEntity(): ArticleEntity =
+    ArticleEntity(
+        this.fileName,
+        this.filePath,
+        this.title,
+        this.publishedDate,
+        this.url,
+        true
+    )

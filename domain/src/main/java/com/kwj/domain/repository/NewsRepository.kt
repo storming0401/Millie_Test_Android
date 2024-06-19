@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
     suspend fun getTopHeadlines(): Flow<Result<List<NewsItem>>>
+    suspend fun saveClickedItem(newsItem: NewsItem)
 }

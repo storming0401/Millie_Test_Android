@@ -1,6 +1,6 @@
 package com.kwj.millie.di
 
-import com.kwj.data.source.db.ArticleDatabase
+import com.kwj.data.source.db.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,5 +20,5 @@ object DaoModule {
 
     @Singleton
     @Provides
-    fun provideArticleDao(database: ArticleDatabase) = database.articleDao()
+    fun provideArticleDao(database: AppDatabase) = database.articleDao()
 }

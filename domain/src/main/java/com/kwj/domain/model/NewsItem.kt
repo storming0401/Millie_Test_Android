@@ -1,9 +1,10 @@
 package com.kwj.domain.model
 
 data class NewsItem(
+    val fileName: String?,
+    val filePath: String?,
     val title: String,
-    val imageUrl: String?,
     val publishedDate: String,
     val url: String,
-    val isViewed: Boolean
+    val isClicked: Boolean
 )
